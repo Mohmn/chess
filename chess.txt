@@ -1,0 +1,34 @@
+
+        user 1 vs user2
+
+        board  
+                64*64
+                which side
+                is playable (d w l)
+                (col,row) which piece is on it
+        pieces
+                piade,gur,badshah,begum,tank,
+                can it eat other players
+             
+             
+                piade
+                        1 qadam
+                gur     
+                        2.5 qadam
+                badshah
+                        dont know
+                begum
+                        row,col,diag
+                tank
+                        row,col                     
+       online
+                socket.io(websocket)
+                server(flask or express)      
+       ai
+                minimax
+                alpha beta pruning
+                monte carlo
+                nueral network
+                
+  
+                

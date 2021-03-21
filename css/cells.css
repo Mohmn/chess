@@ -1,0 +1,34 @@
+
+#board{
+    border: 2px solid black;
+    box-sizing: content-box;
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    margin: 0 auto;
+    width: 50vw;
+  }
+  
+  .row{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+  }
+  
+  
+  .white-cell{
+    background-color : white;  
+     /* #ff6699; */
+    flex: 1;
+  }
+
+  .black-cell{
+    background-color: gray;
+     /* #660022; */
+    flex: 1;
+  }
+
+  .highlight-cell {
+
+    border:  3px solid black;
+  }
