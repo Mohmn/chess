@@ -29,6 +29,14 @@
   }
 
   .highlight-cell {
-
     border:  3px solid black;
+  }
+
+  .dot {
+    border: 3px solid green;
+    width: 1px;
+    border-radius: 50%;
+    margin: auto;
+    top: 50%;
+    position: relative;
   }
