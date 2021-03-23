@@ -16,6 +16,9 @@ export default class ChessBoard {
         
     }
 
+    isFilled(row,col){
+        return this.board[row][col] !== null
+    }
     pieceAt(row,col){
         return this.board[row][col]
     }
