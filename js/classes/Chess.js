@@ -7,7 +7,7 @@ export default class Chess {
         this.display = display
         this.whitePlayer = new Player('white',true)
         this.blackPlayer = new Player('black',false)
-        this.DisplayBoard = this.display.Document.getElementById('board')
+        this.DisplayBoard = this.display.domBoard
     }
 
     mousePressed() {
@@ -15,37 +15,56 @@ export default class Chess {
 
             for(let i=0;i<this.DisplayBoard.children.length;i++){
                 for(let j=0;j<this.DisplayBoard.children[i].children.length;j++){
-
-                    // board.children[i].children[j].addEventListener('click',()=>this.handleClick())
                 
-                    this.DisplayBoard.children[i].children[j].addEventListener('click',()=>this.handleClick([i,j],event))
+                    this.DisplayBoard.children[i].children[j].addEventListener('click',
+                            ()=>this.handleClick([i,j],event))
                 }
             }
     }
 
 
-handleClick(pos,e){
+    // self invoking function used to make movablePos as clisure var
+handleClick = (function(){
     
     let player
-
-    if(this.whitePlayer.turn){
-        player = this.whitePlayer
-    }else{
-        player = this.blackPlayer
-    }
-    if(player.FirstTurn()){
-        player.savePiece([pos,e.target])
-        player.numTimesClicked += 1
-        this.display.highlightCell(e.target)
-    }else{
-        console.log('swaping from player ' + player.color + player.pieceSelected)
-        // swap turn
-        this.display.unHighlightCell(player.pieceSelected[1])
-        player.numTimesClicked = 1
-        this.swapTurn()
-    }
+    let movablePos = null
+    let i=0;
     
-}
+        function handling(pos,e){
+            i+=1
+            console.log(i)
+            if(this.whitePlayer.turn){
+                player = this.whitePlayer
+            }else{
+                player = this.blackPlayer
+            }
+            if(player.FirstTurn()){
+
+                player.savePiece([pos,e.target])
+                player.numTimesClicked += 1
+                this.display.highlightCell(e.target)
+
+                if (this.board.isFilled(pos[0],pos[1])){
+                    const p = this.board.pieceAt(pos[0],pos[1])
+                    movablePos = p.availableMoves(pos[0],pos[1], this.board.board)
+                    this.display.showPath(movablePos)
+                }
+            }else{
+                console.log('swaping from player ' + player.color + player.pieceSelected,movablePos)
+                // swap turn
+                this.display.unHighlightCell(player.pieceSelected[1])
+                if(movablePos){
+                    console.log("DDD",movablePos)
+                    this.display.removePath(movablePos)
+                    movablePos = null
+                }
+                player.numTimesClicked = 1
+                this.swapTurn()
+            }
+        }
+
+    return handling
+})()
 
 
 
