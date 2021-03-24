@@ -33,21 +33,29 @@ export default class Tank extends Piece {
 
             // l_r r_r both are sorted
             const left_row = movableMoves['rows'][0]
-            if (col > left_row[0][1])
+            try {
+                if (col > left_row[0][1])
+                    arr_to_see = movableMoves['rows'][1]
+                else
+                    arr_to_see = left_row
+            } catch (TypeError) {
+                // used here bcz left_row can be of length 0
                 arr_to_see = movableMoves['rows'][1]
-            else
-                arr_to_see = left_row
+            }
         } else {
 
             // l_c r_c both are sorted
-            const left_col = movableMoves['cols'][0]
-            if (row > left_col[0][0])
+            try {
+                const left_col = movableMoves['cols'][0]
+                if (row > left_col[0][0])
+                    arr_to_see = movableMoves['cols'][1]
+                else
+                    arr_to_see = left_col
+            } catch (TypeError) {
                 arr_to_see = movableMoves['cols'][1]
-            else
-                arr_to_see = left_col
+            }
         }
-
-
+        
         for (const arr of arr_to_see) {
             if ((arr[0] === row) && (arr[1] === col)) {
                 return true
@@ -56,6 +64,8 @@ export default class Tank extends Piece {
 
         return false
     }
+
+
 
     availableMoves(row, col, chessBoard) {
         const rows = traverse_rows(row, col, chessBoard, this.color)
