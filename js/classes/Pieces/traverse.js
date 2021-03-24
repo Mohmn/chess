@@ -15,7 +15,7 @@ function traverse_rows(row, col, chessBoard, color) {
 
     let right_row = []
 
-    for (let i = col + 1; i < 8; i++) {
+    for (let i = col + 1; i < chessBoard.size; i++) {
 
         if (!chessBoard[row][i])
             right_row.push([row, i])
@@ -36,18 +36,19 @@ function traverse_cols(row, col, chessBoard, color) {
 
     for (let i = row - 1; i >= 0; i--) {
 
-        if (!chessBoard[i][col])
+        if (!chessBoard[i][col]) // if the boadPos is null
             left_col.push([i, col])
         else {
-            if (chessBoard[i][col].color !== color)
-                left_col.push([i, col])
+            if (chessBoard[i][col].color !== color) //if the boardpos has piece of opp color 
+                left_col.push([i, col])                      // then the piece can cat it
             break
         }
+        
     }
 
     let right_col = []
 
-    for (let i = row + 1; i < 8; i++) {
+    for (let i = row + 1; i < chessBoard.size; i++) {
 
         if (!chessBoard[i][col])
             right_col.push([i, col])
@@ -62,7 +63,60 @@ function traverse_cols(row, col, chessBoard, color) {
 }
 
 
+function traverse_diagonals(row, col, chessBoard, color){
+
+    let leftUpperDiag = []
+    for(let i=row,j=col;i>=0,j>=0;i--,j--){
+ 
+        if (!chessBoard[i][col])
+            leftUpperDiag.push([i,j])
+        else {
+            if (chessBoard[i][j].color !== color)
+                leftUpperDiag.push([i, j])
+            break
+        }
+    }
+
+    let rightLowerDiag = []
+
+    for(let i=row,j=col;i<chessBoard.size,j<chessBoard.size;i++,j++){
+         
+        if (!chessBoard[i][j])
+            rightLowerDiag.push([i, j])
+        else {
+            if (chessBoard[i][j].color !== color)
+                rightLowerDiag.push([i, j])
+            break
+        }
+    }
+
+    let leftLowerDiag = []
+    for(let i=row,j=col;i<chessBoard.size,j>=0;i++,j--){
+
+        if (!chessBoard[i][j])
+            leftLowerDiag.push([i, j])
+        else {
+            if (chessBoard[i][j].color !== color)
+                leftLowerDiag.push([i, j])
+            break
+        }
+    }
+
+    let rightUpperDiag = []
+    for(let i=row,j=col;i>=0,j<chessBoard.size;i--,j++){
+        if (!chessBoard[i][j])
+            rightUpperDiag.push([i, j])
+        else {
+            if (chessBoard[i][j].color !== color)
+                rightUpperDiag.push([i, j])
+            break
+        }
+    }
+
+    return [leftUpperDiag,rightLowerDiag,leftLowerDiag,rightUpperDiag]
+}
 export {
     traverse_rows,
-    traverse_cols
+    traverse_cols,
+    traverse_diagonals
 }
