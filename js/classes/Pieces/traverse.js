@@ -103,11 +103,8 @@ function traverse_diagonals(row, col, chessBoard, color) {
     }
 
     let rightUpperDiag = []
-    let i = row - 1
-    let  j = col + 1
-    console.log(row -1, col + 1, i,j,chessBoard.size,chessBoard.board[i][j], 'rud')
     for (let i = row - 1, j = col + 1; i >= 0 && j < chessBoard.size; i--, j++) {
-        console.log(i,j, 'rud')
+        
         if (!chessBoard.board[i][j])
             rightUpperDiag.push([i, j])
         else {
@@ -117,7 +114,6 @@ function traverse_diagonals(row, col, chessBoard, color) {
         }
     }
 
-    console.log(leftUpperDiag, rightLowerDiag, leftLowerDiag, rightUpperDiag)
     return [leftUpperDiag, rightLowerDiag, leftLowerDiag, rightUpperDiag]
 }
 export {
