@@ -20,11 +20,13 @@ export default class Knight extends Piece {
 
 
         // tyring to figure out if forms an L_shapei 
-        // this method wouldn'd work becz it would had also req to check color of the pieces
+         
         // if( (row === (this.getRow()+2)) || (row === (this.getRow()-2)) ){
         //     if((col === (this.getCol()+1)) || (col === (this.getCol()-1)) ){
         //         if()
-
+                    // here i would had to check the color also
+                    // which wasn't possible due to the arguments 
+                    // i would had needed chessboard as arg 
         //     }
                 
         //         return  true
