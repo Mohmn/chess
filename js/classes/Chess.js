@@ -46,26 +46,32 @@ export default class Chess {
 
                 player.numTimesClicked += 1
                 pieceSelectedByPlayer = this.board.pieceAt(pos[0], pos[1])
-                movablePos = pieceSelectedByPlayer.availableMoves(pos[0], pos[1], this.board.board)
+                movablePos = pieceSelectedByPlayer.availableMoves(pos[0], pos[1], this.board)
                 this.display.showPath(movablePos)
                 
 
-            } else {
-
+            } 
+            else if( movablePos && pieceSelectedByPlayer.canMoveto(pos[0],pos[1],movablePos)) {
                 // 2nd turn
                 // console.log('swaping from player ' + player.color + player.pieceSelected, movablePos)
                 // swap turn
-                
+                // console.log(movablePos)
 
-                if (movablePos && pieceSelectedByPlayer.canMoveto(pos[0],pos[1],movablePos)) {
-                    this.display.removePath(movablePos)
-                    this.display.unHighlightCell(player.pieceSelected[1])
-                    this.movePiece(pieceSelectedByPlayer,pos)
-                    movablePos = null
-                    pieceSelectedByPlayer = null
-                    player.numTimesClicked = 1
-                    this.swapTurn()
-                }
+                this.display.removePath(movablePos)
+                this.display.unHighlightCell(player.pieceSelected[1])
+                this.movePiece(pieceSelectedByPlayer,pos)
+                movablePos = null
+                pieceSelectedByPlayer = null
+                player.numTimesClicked = 1
+                this.swapTurn()
+            }else{
+                // means that this wasn't a validated move so undo all the thinfs
+                this.display.removePath(movablePos)
+                this.display.unHighlightCell(player.pieceSelected[1])
+                player.numTimesClicked = 1
+                movablePos = null
+                pieceSelectedByPlayer = null
+            
 
             }
         }
