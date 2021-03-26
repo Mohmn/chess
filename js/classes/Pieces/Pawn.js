@@ -17,11 +17,12 @@ export default class Pawn extends Piece {
             this.moveUp = true
     }
 
-
+    // the direction argument is used to check if the player moves upwards or downwards
+    // -1 direction for upwards movement, +1 direction for downwards movement
 
     availableMoves(row, col, chessBoard) {
 
-        let moves = [this.moveUpwards(row, col, chessBoard,1)]
+        let moves = [this.movement(row, col, chessBoard, 1)]
         console.log(moves)
         const movable = {
 
@@ -31,6 +32,8 @@ export default class Pawn extends Piece {
 
     }
 
+
+    // this methods checks for pawns first move
     makeFirstmove(row, col, chessBoard, direction) {
         let PlayableMoves = []
         if (!chessBoard.isFilled(row + direction, col))
@@ -43,57 +46,57 @@ export default class Pawn extends Piece {
         return PlayableMoves
     }
 
+    // if the pawn can capture the piece which is at the left corner side of it
     canCaptureLeftDiagonal(row, col, chessBoard, direction) {
-        return ( chessBoard.isFilled(row + direction, col + direction) && chessBoard.opponentPlayer(row + direction, col + direction, this.color))
+        return (chessBoard.isFilled(row + direction, col + direction) && chessBoard.opponentPlayer(row + direction, col + direction, this.color))
     }
-
+    // if the pawn can capture the piece which is at the right corner side of it
     canCaptureRightDiagonal(row, col, chessBoard, direction) {
-        return (chessBoard.isFilled(row + direction, col + (-1*direction)) && chessBoard.opponentPlayer(row + direction, col + (-1*direction), this.color))
+        return (chessBoard.isFilled(row + direction, col + (-1 * direction)) && chessBoard.opponentPlayer(row + direction, col + (-1 * direction), this.color))
     }
-    moveUpwards(row, col, chessBoard,direction) {
+
+
+    movement(row, col, chessBoard, direction) {
+
+       
+        if ((col > 0) && col < (chessBoard.size - 1))
+            return this.specifiedMovement(row, col, chessBoard, direction, "both")
+        else if (col === 0)
+            return this.specifiedMovement(row, col, chessBoard, direction, "right")
+        else
+            return this.specifiedMovement(row, col, chessBoard, direction, "left")
+    }
+
+
+    specifiedMovement(row, col, chessBoard, direction, diagonal) {
+
         let PlayableMoves = []
-        if ((col > 0) && col < (chessBoard.size - 1)) {
 
-            if (this.firstMove)
-                PlayableMoves = this.makeFirstmove(row, col, chessBoard, direction)
-            else {
+        if (this.firstMove)
+            PlayableMoves = this.makeFirstmove(row, col, chessBoard, direction)
+        else {
 
-                if (!chessBoard.isFilled(row + direction, col))
-                    PlayableMoves.push([row + direction, col])
-            }
+            if (!chessBoard.isFilled(row + direction, col))
+                PlayableMoves.push([row + direction, col])
+        }
+        if (diagonal === "both") {
 
             if (this.canCaptureLeftDiagonal(row, col, chessBoard, direction))
                 PlayableMoves.push([row + direction, col + direction])
             if (this.canCaptureRightDiagonal(row, col, chessBoard, direction))
-                PlayableMoves.push([row + direction, col + (-1*direction)])
+                PlayableMoves.push([row + direction, col + (-1 * direction)])
 
-            return PlayableMoves
-        } else if (col === 0) {
-            if (this.firstMove)
-                PlayableMoves = this.makeFirstmove(row, col, chessBoard, direction)
-            else {
+        } else if (diagonal === "left") {
 
-                if (!chessBoard.isFilled(row + direction, col))
-                    PlayableMoves.push([row + direction, col])
-            }
-            if (this.canCaptureRightDiagonal(row, col, chessBoard, direction))
-                PlayableMoves.push([row + direction, col + (-1*direction)])
+            if (this.canCaptureLeftDiagonal(row, col, chessBoard, direction))
+                PlayableMoves.push([row + direction, col + direction])
 
-            return PlayableMoves
         } else {
 
-            if (this.firstMove)
-                PlayableMoves = this.makeFirstmove(row, col, chessBoard, direction)
-            else {
-                if (!chessBoard.isFilled(row + direction, col))
-                    PlayableMoves.push([row + direction, col])
-            }
-
-            if (this.canCaptureLeftDiagonal(row, col, chessBoard, direction))
-                PlayableMoves.push([row + direction, col + direction])
-
-            return PlayableMoves
+            if (this.canCaptureRightDiagonal(row, col, chessBoard, direction))
+                PlayableMoves.push([row + direction, col + (-1 * direction)])
+                
         }
-
+        return PlayableMoves
     }
-    }
+}
