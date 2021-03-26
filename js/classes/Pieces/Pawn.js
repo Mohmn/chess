@@ -11,7 +11,7 @@ export default class Pawn extends Piece {
         // if the starting pos of the pawn is 0 it means that it has to move move Downwards
         // else it has to move upwards   
 
-        if (row == 0)
+        if (row === 0)
             this.moveUp = false
         else
             this.moveUp = true
@@ -21,12 +21,22 @@ export default class Pawn extends Piece {
 
     // }
 
+    canBePromoted(boardSize){
+        if (this.moveUp)
+            return (this.row === 0)
+        return (this.row === (boardSize-1)) 
+    }
 
     canMoveto(row, col, movableMoves) {
-      
+
+        
         for(const arr of movableMoves['moves'][0]){
-            if( (arr[0] === row ) && (arr[1] === col) )
+            if( (arr[0] === row ) && (arr[1] === col)){
+                // reason for making it false here is to check if the player choose the right pos then
+                // only make the first move to false
+                this.firstMove = false
                 return true
+                }
         }
 
         return false
@@ -41,7 +51,7 @@ export default class Pawn extends Piece {
             moves = [this.movement(row, col, chessBoard, -1)]
         else
             moves = [this.movement(row, col, chessBoard, 1)]
-        console.log(moves)
+       
         const movable = {
 
             moves: moves
@@ -54,22 +64,26 @@ export default class Pawn extends Piece {
     // this methods checks for pawns first move
     makeFirstmove(row, col, chessBoard, direction) {
         let PlayableMoves = []
-        if (!chessBoard.isFilled(row + direction, col))
-            PlayableMoves.push([row + direction, col])
-        if (!chessBoard.isFilled(row + (2 * direction), col))
-            PlayableMoves.push([row + (2 * direction), col])
 
-        this.firstMove = false
+        // if the first cell is null then only check for the second cell
+        if (!chessBoard.isFilled(row + direction, col)){
+            PlayableMoves.push([row + direction, col])
+
+            if (!chessBoard.isFilled(row + (2 * direction), col))
+                PlayableMoves.push([row + (2 * direction), col])
+        }
+        
 
         return PlayableMoves
     }
 
     // if the pawn can capture the piece which is at the left corner side of it
     canCaptureLeftDiagonal(row, col, chessBoard, direction) {
-        return (chessBoard.isFilled(row + direction, col + direction) && chessBoard.opponentPlayer(row + direction, col + direction, this.color))
+        return (chessBoard.isFilled(row + direction, col + direction)) && (chessBoard.opponentPlayer(row + direction, col + direction, this.color))
     }
     // if the pawn can capture the piece which is at the right corner side of it
     canCaptureRightDiagonal(row, col, chessBoard, direction) {
+        console.log('r',row + direction, col + (-1 * direction))
         return (chessBoard.isFilled(row + direction, col + (-1 * direction)) && chessBoard.opponentPlayer(row + direction, col + (-1 * direction), this.color))
     }
 
@@ -87,10 +101,28 @@ export default class Pawn extends Piece {
 
         if ((col > 0) && col < (chessBoard.size - 1))
             return this.specifiedMovement(row, col, chessBoard, direction, "both")
-        else if (col === 0)
-            return this.specifiedMovement(row, col, chessBoard, direction, "right")
-        else
-            return this.specifiedMovement(row, col, chessBoard, direction, "left")
+        else if (col === 0){
+            if (direction === 1)
+                return this.specifiedMovement(row, col, chessBoard, direction, "left")
+            else
+                return this.specifiedMovement(row, col, chessBoard, direction, "right")
+
+        }
+        else{
+            if (direction === 1)
+                return this.specifiedMovement(row, col, chessBoard, direction, "right")
+            else
+                return this.specifiedMovement(row, col, chessBoard, direction, "left")
+
+        }
+
+            // the reason for intermixing
+            // e.g when moving up if the player is at 7,0 then the right pos of the player
+            // would be row+1,col+1
+            // now suppose the player is at 0,0 the right pos of the player
+            // would 0+1,0+1 
+            // now since the direction is different +1 when moving upwards and -1 when moving downwards
+            // the left and right gets intermixed
     }
 
     specifiedMovement(row, col, chessBoard, direction, diagonal) {
