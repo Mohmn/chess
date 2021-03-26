@@ -1,3 +1,4 @@
+import ChessBoard from "./ChessBoard.js"
 import Player from "./Player.js"
 
 export default class Chess {
@@ -49,23 +50,35 @@ export default class Chess {
                 movablePos = pieceSelectedByPlayer.availableMoves(pos[0], pos[1], this.board)
                 this.display.showPath(movablePos)
                 
-
+                console.log(movablePos)
             } 
             else if( movablePos && pieceSelectedByPlayer.canMoveto(pos[0],pos[1],movablePos)) {
                 // 2nd turn
                 // console.log('swaping from player ' + player.color + player.pieceSelected, movablePos)
                 // swap turn
-                // console.log(movablePos)
+                
 
                 this.display.removePath(movablePos)
                 this.display.unHighlightCell(player.pieceSelected[1])
                 this.movePiece(pieceSelectedByPlayer,pos)
+
+                if(pieceSelectedByPlayer.constructor.name === "Pawn"){
+                    // check for pawn promotion
+                    if(pieceSelectedByPlayer.canBePromoted(this.board.size)){
+                        // do something in chess disp
+                        // to do write gui for pawn promotion
+                    }
+                }
+                // console.log(movablePos,'yes',pieceSelectedByPlayer.constructor.name)
                 movablePos = null
                 pieceSelectedByPlayer = null
                 player.numTimesClicked = 1
                 this.swapTurn()
+
+
             }else{
                 // means that this wasn't a validated move so undo all the thinfs
+                console.log(movablePos,'no')
                 this.display.removePath(movablePos)
                 this.display.unHighlightCell(player.pieceSelected[1])
                 player.numTimesClicked = 1
@@ -87,7 +100,7 @@ export default class Chess {
         this.board.removePiece(pos[0],pos[1])
         piece.moveTo(pos[0],pos[1])
         this.board.addPiece(piece)
-        // console.log(this.board,'b')
+
         this.display.reDraw()
     }
     
