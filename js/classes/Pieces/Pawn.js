@@ -17,12 +17,30 @@ export default class Pawn extends Piece {
             this.moveUp = true
     }
 
+    // canMoveTo[row, col, chessBoard) {
+
+    // }
+
+
+    canMoveto(row, col, movableMoves) {
+      
+        for(const arr of movableMoves['moves'][0]){
+            if( (arr[0] === row ) && (arr[1] === col) )
+                return true
+        }
+
+        return false
+    }
     // the direction argument is used to check if the player moves upwards or downwards
     // -1 direction for upwards movement, +1 direction for downwards movement
 
     availableMoves(row, col, chessBoard) {
 
-        let moves = [this.movement(row, col, chessBoard, 1)]
+        let moves  = []
+        if (this.moveUp)
+            moves = [this.movement(row, col, chessBoard, -1)]
+        else
+            moves = [this.movement(row, col, chessBoard, 1)]
         console.log(moves)
         const movable = {
 
@@ -58,7 +76,15 @@ export default class Pawn extends Piece {
 
     movement(row, col, chessBoard, direction) {
 
-       
+    //    if col is in range[1,chessboard.size-1] then the pawn can capture two pieces
+    //    which are at the diagonal position to it
+
+    // if the col is == 0 then pawn can move forward and capture piece which is positioned
+    // at the right coner of it
+
+    // if the above two conditions fail 
+    // then pawn can move forward and capture piece which is positioned at the left corner of it
+
         if ((col > 0) && col < (chessBoard.size - 1))
             return this.specifiedMovement(row, col, chessBoard, direction, "both")
         else if (col === 0)
@@ -66,7 +92,6 @@ export default class Pawn extends Piece {
         else
             return this.specifiedMovement(row, col, chessBoard, direction, "left")
     }
-
 
     specifiedMovement(row, col, chessBoard, direction, diagonal) {
 
@@ -95,7 +120,7 @@ export default class Pawn extends Piece {
 
             if (this.canCaptureRightDiagonal(row, col, chessBoard, direction))
                 PlayableMoves.push([row + direction, col + (-1 * direction)])
-                
+
         }
         return PlayableMoves
     }
