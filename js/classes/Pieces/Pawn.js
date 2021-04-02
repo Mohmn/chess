@@ -11,7 +11,7 @@ export default class Pawn extends Piece {
         // if the starting pos of the pawn is 0 it means that it has to move move Downwards
         // else it has to move upwards   
 
-        if (row === 0)
+        if (row === 1)
             this.moveUp = false
         else
             this.moveUp = true
@@ -29,6 +29,8 @@ export default class Pawn extends Piece {
 
     canMoveto(row, col, movableMoves) {
 
+        if(this.getRow() === row && this.getCol() === this.getCol())
+            return false
         
         for(const arr of movableMoves['moves'][0]){
             if( (arr[0] === row ) && (arr[1] === col)){
@@ -157,3 +159,4 @@ export default class Pawn extends Piece {
         return PlayableMoves
     }
 }
+
