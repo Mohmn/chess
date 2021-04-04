@@ -12,7 +12,10 @@ export default class Queen extends Piece {
         super(row, col, color)
         this.representation = representation
     }
+    
+    // canMoveTo(row, col, chessBoard) {
 
+    // }
     canMoveto(row, col, movableMoves) {
         // if row,col in availableMoves
 
@@ -56,13 +59,7 @@ export default class Queen extends Piece {
             }
         }
         
-        for (const arr of arr_to_see) {
-            if ((arr[0] === row) && (arr[1] === col)) {
-                return true
-            }
-        }
-
-        return false
+        return this.pos_in_arr(row, col, arr_to_see)
     }
 
     canMoveToDiag(row, col, movableMoves) {

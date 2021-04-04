@@ -3,7 +3,7 @@ import {
     traverse_diagonals
 } from "./traverse.js"
 
-export default class Tank extends Piece {
+export default class Bishop extends Piece {
 
 
     constructor(row, col, color, representation) {
@@ -42,7 +42,7 @@ export default class Tank extends Piece {
 
 
     pos_in_arr(row, col, arr_to_see) {
-        console.log(row,col,arr_to_see,'bbb')
+       
         for (const arr of arr_to_see) {
             if ((arr[0] === row) && (arr[1] === col)) {
                 return true

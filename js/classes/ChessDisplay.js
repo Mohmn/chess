@@ -13,8 +13,6 @@ export default class ChessDisplay {
 
     draw() {
 
-
-
         for (let i = 0; i < this.ChessBoard.size; i++) {
             const row = this.Document.createElement('div')
             row.className = "row"
@@ -44,6 +42,26 @@ export default class ChessDisplay {
 
     }
 
+    reDraw(){
+
+        for (let i = 0; i < this.domBoard.children.length; i++) {
+
+            for (let j = 0; j < this.domBoard.children[i].children.length; j++) {
+
+                if (this.ChessBoard.board[i][j]) {
+                    const p = this.ChessBoard.pieceAt(i, j)
+                    this.domBoard.children[i].children[j].innerText = p.representation
+                    this.domBoard.children[i].children[j].style.color = p.color
+                }else{
+                    this.domBoard.children[i].children[j].innerText = null
+                }
+            }
+
+        }
+
+        
+    }
+
     getCell(row, col) {
         return this.domBoard.children[row].children[col]
     }
@@ -68,8 +86,8 @@ export default class ChessDisplay {
     // obj of array of arrays locations
     showPath(locations) {
         for (const loc in locations) {
-            locations[loc].map((pos) => pos.map((p) => {
 
+            locations[loc].map((pos) => pos.map((p) => {
                 const cell = this.getCell(p[0], p[1])
                 this.visulaizeCell(cell)
             }))
@@ -85,5 +103,7 @@ export default class ChessDisplay {
             }))
         }
     }
+
+    
     
 }

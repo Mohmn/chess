@@ -32,6 +32,14 @@ export default class Chess {
         let movablePos = null
         let pieceSelectedByPlayer = null
 
+
+        function resetPlayer(obj){
+            movablePos = null
+            pieceSelectedByPlayer = null
+            player.numTimesClicked = 1
+            obj.swapTurn()
+        }
+
         function handling(pos, e) {
 
             if (this.whitePlayer.turn) {
@@ -45,9 +53,10 @@ export default class Chess {
 
             if (this.board.isFilled(pos[0], pos[1]) && player.FirstTurn()  ) {
 
-                console.log(this.board.pieceAt(pos[0],pos[1]).color,player.color,(this.board.pieceAt(pos[0],pos[1]).color !== player.color))
+            //    if it is white players turn olayer cannot click on black players pieces and vice versa
                 if(this.board.pieceAt(pos[0],pos[1]).color !== player.color)
                     return 
+
                 // save x,y pos selected by player on first turn
                 player.savePiece([pos, e.target])
                 this.display.highlightCell(e.target)
@@ -76,19 +85,18 @@ export default class Chess {
                     }
                 }
                 // console.log(movablePos,'yes',pieceSelectedByPlayer.constructor.name)
-                movablePos = null
-                pieceSelectedByPlayer = null
-                player.numTimesClicked = 1
-                this.swapTurn()
+
                 if(this.isInCheck(this.board, player)){
                     console.log("Chess in king")
                     if(this.isInCheckMate(this.board, player)){
                     console.log('chessmate')
                 }
                 }else if (this.isInStalemate(this.board,player)){
-                    console.log('stalemate')
-                    
+                    console.log('stalemate')      
                 }
+
+                resetPlayer(this)
+
 
             } else {
                 // means that this wasn't a validated move so undo all the things

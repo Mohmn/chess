@@ -39,4 +39,9 @@
     margin: auto;
     top: 50%;
     position: relative;
+  
+  }
+
+  .eat {
+    border:  3px solid red;
   }
