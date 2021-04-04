@@ -7,17 +7,25 @@ export default class King extends Piece {
         this.representation = representation
     }
 
-     // canMoveTo[row, col, chessBoard) {
+    // canMoveTo[row, col, chessBoard) {
 
     // }
 
 
     canMoveto(row, col, movableMoves) {
-      
-        for(const array of movableMoves['moves']){
-            if(array[0][0] == row){
-                for(const arr of array){
-                    if( (arr[0] === row ) && (arr[1] === col) )
+        if ((this.getRow() === row) && (this.getCol() === col))
+            return false
+
+        for (const array of movableMoves['moves']) {
+            if (array.length === 0)
+                continue
+
+            // first check if the row matches
+            // then check for that whole array
+            // bcz its an array of kings movement is actually on three rows i.e the upper row , the middle row(on which king is) and the lower row 
+            if (array[0][0] === row) {
+                for (const arr of array) {
+                    if ((arr[0] === row) && (arr[1] === col))
                         return true
                 }
             }
@@ -27,9 +35,16 @@ export default class King extends Piece {
     }
 
 
+    // it's a double loop from (row-1-row+2,
+    //                               col-1,col+2) 
+
+    //   firstly it checks
+
     availableMoves(row, col, chessBoard) {
 
-        let x = row,y = col,moves = []
+        let x = row,
+            y = col,
+            moves = []
 
         if (row - 1 >= 0)
             x = row - 1
@@ -50,7 +65,7 @@ export default class King extends Piece {
 
                 if (!chessBoard.board[i][j])
                     arr.push([i, j])
-                else if(chessBoard.board[i][j].color !== this.color)
+                else if (chessBoard.board[i][j].color !== this.color)
                     arr.push([i, j])
             }
 
@@ -58,8 +73,7 @@ export default class King extends Piece {
         }
 
         const movable = {
-            
-            moves : moves
+            moves: moves
         }
 
         return movable
