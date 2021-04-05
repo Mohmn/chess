@@ -13,6 +13,7 @@ export default class King extends Piece {
 
 
     canMoveto(row, col, movableMoves) {
+        
         if ((this.getRow() === row) && (this.getCol() === col))
             return false
 
@@ -40,7 +41,8 @@ export default class King extends Piece {
 
     //   firstly it checks
 
-    availableMoves(row, col, chessBoard) {
+    availableMoves(chessBoard) {
+        const row=this.getRow(),col = this.getCol()
 
         let x = row,
             y = col,

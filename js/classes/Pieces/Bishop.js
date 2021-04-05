@@ -52,7 +52,8 @@ export default class Bishop extends Piece {
         return false
     }
 
-    availableMoves(row, col, chessBoard) {
+    availableMoves(chessBoard) {
+        const row=this.getRow(),col = this.getCol()
         const diagonals = traverse_diagonals(row, col, chessBoard, this.color)
 
         const movable = {

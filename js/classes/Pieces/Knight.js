@@ -51,7 +51,8 @@ export default class Knight extends Piece {
 
     // to do optimize it more
     // remove hardcoded l_shaped coordinates
-    availableMoves(row, col, chessBoard) {
+    availableMoves(chessBoard) {
+        const row=this.getRow(),col = this.getCol()
         let moves = []
         // l shapes
         // max num of l_shapes chess piece can make it is 8

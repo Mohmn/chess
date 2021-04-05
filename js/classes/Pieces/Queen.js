@@ -94,7 +94,8 @@ export default class Queen extends Piece {
 
 
 
-    availableMoves(row, col, chessBoard) {
+    availableMoves(chessBoard) {
+        const row=this.getRow(),col = this.getCol()
         const rows = traverse_rows(row, col, chessBoard, this.color)
         const cols = traverse_cols(row, col, chessBoard, this.color)
         const diags = traverse_diagonals(row, col, chessBoard, this.color)

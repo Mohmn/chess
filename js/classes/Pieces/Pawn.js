@@ -27,6 +27,7 @@ export default class Pawn extends Piece {
         return (this.row === (boardSize-1)) 
     }
 
+    // moveWouldCauseCheck()
     canMoveto(row, col, movableMoves) {
 
         if(this.getRow() === row && this.getCol() === this.getCol())
@@ -46,8 +47,8 @@ export default class Pawn extends Piece {
     // the direction argument is used to check if the player moves upwards or downwards
     // -1 direction for upwards movement, +1 direction for downwards movement
 
-    availableMoves(row, col, chessBoard) {
-
+    availableMoves(chessBoard) {
+        const row=this.getRow(),col = this.getCol()
         let moves  = []
         if (this.moveUp)
             moves = [this.movement(row, col, chessBoard, -1)]
@@ -85,7 +86,7 @@ export default class Pawn extends Piece {
     }
     // if the pawn can capture the piece which is at the right corner side of it
     canCaptureRightDiagonal(row, col, chessBoard, direction) {
-        console.log('r',row + direction, col + (-1 * direction))
+        // console.log('r',row + direction, col + (-1 * direction))
         return (chessBoard.isFilled(row + direction, col + (-1 * direction)) && chessBoard.opponentPlayer(row + direction, col + (-1 * direction), this.color))
     }
 
