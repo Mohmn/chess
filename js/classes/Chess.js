@@ -27,13 +27,13 @@ export default class Chess {
 
     // self invoKing function used to make movablePos as clisure var
     handleClick = (function () {
-        
+
         let player
         let movablePos = null
         let pieceSelectedByPlayer = null
 
 
-        function resetPlayer(obj){
+        function resetPlayer(obj) {
             movablePos = null
             pieceSelectedByPlayer = null
             player.numTimesClicked = 1
@@ -48,14 +48,14 @@ export default class Chess {
                 player = this.blackPlayer
             }
 
-            
+
             // if the board is filled with some piece
 
-            if (this.board.isFilled(pos[0], pos[1]) && player.FirstTurn()  ) {
+            if (this.board.isFilled(pos[0], pos[1]) && player.FirstTurn()) {
 
-            //    if it is white players turn olayer cannot click on black players pieces and vice versa
-                if(this.board.pieceAt(pos[0],pos[1]).color !== player.color)
-                    return 
+                //    if it is white players turn olayer cannot click on black players pieces and vice versa
+                if (this.board.pieceAt(pos[0], pos[1]).color !== player.color)
+                    return
 
                 // save x,y pos selected by player on first turn
                 player.savePiece([pos, e.target])
@@ -63,7 +63,7 @@ export default class Chess {
 
                 player.numTimesClicked += 1
                 pieceSelectedByPlayer = this.board.pieceAt(pos[0], pos[1])
-                movablePos = pieceSelectedByPlayer.availableMoves(pos[0], pos[1], this.board)
+                movablePos = pieceSelectedByPlayer.availableMoves(this.board)
                 this.display.showPath(movablePos)
 
                 console.log(movablePos)
@@ -76,7 +76,7 @@ export default class Chess {
                 this.display.removePath(movablePos)
                 this.display.unHighlightCell(player.pieceSelected[1])
                 this.movePiece(pieceSelectedByPlayer, pos)
-
+                this.display.reDraw()
                 if (pieceSelectedByPlayer.constructor.name === "Pawn") {
                     // check for pawn promotion
                     if (pieceSelectedByPlayer.canBePromoted(this.board.size)) {
@@ -86,13 +86,13 @@ export default class Chess {
                 }
                 // console.log(movablePos,'yes',pieceSelectedByPlayer.constructor.name)
 
-                if(this.isInCheck(this.board, player)){
+                if (this.isInCheck(this.board, player)) {
                     console.log("Chess in king")
-                    if(this.isInCheckMate(this.board, player)){
-                    console.log('chessmate')
-                }
-                }else if (this.isInStalemate(this.board,player)){
-                    console.log('stalemate')      
+                    if (this.isInCheckMate(this.board, player)) {
+                        console.log('chessmate')
+                    }
+                } else if (this.isInStalemate(this.board, player)) {
+                    console.log('stalemate')
                 }
 
                 resetPlayer(this)
@@ -122,7 +122,7 @@ export default class Chess {
         piece.moveTo(pos[0], pos[1])
         this.board.addPiece(piece)
 
-        this.display.reDraw()
+        
     }
 
     swapTurn() {
@@ -147,15 +147,15 @@ export default class Chess {
             for (let j = 0; j < ChessBoard.size; j++) {
                 if (ChessBoard.isFilled(i, j)) {
                     King = ChessBoard.pieceAt(i, j)
-                    if ((King.constructor.name === "King")  && (player.color !== King.color))
+                    if ((King.constructor.name === "King") && (player.color !== King.color))
                         break
                     King = null
                 }
 
             }
 
-            if (King){
-                console.log(King.color,"ccccccccccccccccccccccccc")
+            if (King) {
+                console.log(King.color, "ccccccccccccccccccccccccc")
                 break
             }
         }
@@ -333,7 +333,8 @@ export default class Chess {
         //pawns 
         // pawns  moving down
         // upper corners
-        const row = King.getRow(), col = King.getCol()
+        const row = King.getRow(),
+            col = King.getCol()
         let upperCornerPawns = []
         if (row > 0) {
             if (col > 0)
@@ -358,7 +359,7 @@ export default class Chess {
         // pawnns moving up 
         // lower cornerns
         let lowerCornerPawns = []
-        if (row < ChessBoard.size-1) {
+        if (row < ChessBoard.size - 1) {
             if (col > 0)
                 lowerCornerPawns.push([row + 1, col - 1]) //leftlowercorner
             if (col < ChessBoard.size)
@@ -378,7 +379,16 @@ export default class Chess {
             }
         }
         // now for knight pieces
-        let l_shape_coord = [[-2, +1],[-2, -1],[+2, +1],[+2, -1],[-1, +2],[-1, -2],[+1, +2],[+1, -2]]
+        let l_shape_coord = [
+            [-2, +1],
+            [-2, -1],
+            [+2, +1],
+            [+2, -1],
+            [-1, +2],
+            [-1, -2],
+            [+1, +2],
+            [+1, -2]
+        ]
 
         for (let i = 0; i < l_shape_coord.length; i++) {
             let x = l_shape_coord[i][0] + King.getRow()
@@ -406,63 +416,148 @@ export default class Chess {
     // avaible moves for king
     // if for all moves check function return true
     // its a checkmate  
+    // chck for every piece
+    // isInCheckMate(ChessBoard, player) {
+    //     let King = null
+    //     for (let i = 0; i < ChessBoard.size; i++) {
+    //         for (let j = 0; j < ChessBoard.size; j++) {
+    //             if (ChessBoard.isFilled(i, j)) {
+    //                 King = ChessBoard.pieceAt(i, j)
+    //                 if ((King.constructor.name === "King") && (player.color !== King.color))
+    //                     break
+    //                 King = null
+    //             }
 
+    //         }
+
+    //         if (King)
+    //             break
+    //     }
+
+    //     const orig_pos = [King.getRow(), King.getCol()]
+
+    //     function moveKing(piece, pos) {
+    //         // if the pos contains piece then remove it
+    //         if (!ChessBoard.isFilled(pos[0], pos[1])) {
+    //             ChessBoard.removePiece(piece.getRow(), piece.getCol())
+    //             ChessBoard.removePiece(pos[0], pos[1])
+    //             piece.moveTo(pos[0], pos[1])
+    //             ChessBoard.addPiece(piece)
+    //         }
+    //     }
+    //     const king_moves = King.availableMoves(ChessBoard)
+    //     console.log(king_moves, "kkkkkk")
+
+    //     // using moved variable tot see if the king had any moves to move
+    //     let moved = false
+    //     for (const moves of king_moves['moves']) {
+    //         for (const move of moves) {
+    //             moveKing(King, move)
+    //             if (!this.isInCheck(ChessBoard, player)) {
+    //                 // unmove king
+    //                 moveKing(King, orig_pos)
+    //                 return false
+    //             }
+
+    //             moved = true
+    //         }
+    //     }
+
+
+    //     moveKing(King, orig_pos)
+    //     return (true && moved)
+    // }
     isInCheckMate(ChessBoard, player) {
-        let King = null
+        // if any piece has any legal move left that would remove the king from check
+        const pieces = []
+
         for (let i = 0; i < ChessBoard.size; i++) {
             for (let j = 0; j < ChessBoard.size; j++) {
-                if (ChessBoard.isFilled(i, j)) {
-                    King = ChessBoard.pieceAt(i, j)
-                    if ( (King.constructor.name === "King")  && (player.color !== King.color) )
-                        break
-                    King = null
+                if (ChessBoard.isFilled(i, j) && (ChessBoard.pieceAt(i, j).color !== player.color)) {
+                    const piece = ChessBoard.pieceAt(i, j)
+                    console.log(piece.constructor.name,piece.color)
+                    if (piece_can_counter_check(piece,this)) {
+                        return false
+                    }
                 }
-    
-            }
-    
-            if (King)
-                break
-        }
-    
-        const orig_pos = [King.getRow(),King.getCol()] 
-
-        function moveKing(piece,pos){
-            // if the pos contains piece then remove it
-            if(!ChessBoard.isFilled(pos[0],pos[1])){
-                ChessBoard.removePiece(piece.getRow(), piece.getCol())
-                ChessBoard.removePiece(pos[0], pos[1])
-                piece.moveTo(pos[0], pos[1])
-                ChessBoard.addPiece(piece)
             }
         }
-        const king_moves = King.availableMoves(orig_pos[0],orig_pos[1],ChessBoard)
-        console.log(king_moves,"kkkkkk")
 
-        // using moved variable tot see if the king had any moves to move
-         let moved = false
-        for(const moves of king_moves['moves']){
-            for(const move of moves){
-                moveKing(King, move)
-                if(!this.isInCheck(ChessBoard,player)){
-                    // unmove king
-                    moveKing(King,orig_pos)
-                    return false
+        return true
+
+
+        function piece_can_counter_check(piece,obj) {
+            
+            const moves = piece.availableMoves(ChessBoard)
+            let opp_piece = null
+            const piece_pos = [piece.getRow(), piece.getCol()]
+
+            for (const pos of map_to_individual_move(moves)) {
+                
+                if(ChessBoard.isFilled(pos[0],pos[1])){
+                    // mark the pos of opp piece
+                    opp_piece = ChessBoard.pieceAt(pos[0],pos[1])
+                    obj.movePiece(piece,pos)
+                }else
+                    obj.movePiece(piece,pos)
+
+                // if we move the player to that pos and that cancels out check
+                // then its not a checkmate 
+                if(!obj.isInCheck(ChessBoard,player)){
+
+                    // move piece back to its original pos
+                    obj.movePiece(piece,piece_pos)
+
+                    // if we displaced any piece then move back it to its original pos
+                    if(opp_piece){
+                        ChessBoard.addPiece(opp_piece)
+                        opp_piece = null
+                    }
+
+                    return true
                 }
 
-                moved = true
+                // move piece back to its original pos
+                obj.movePiece(piece,piece_pos)
+
+                // if we displaced any piece then move back it to its original pos
+                if(opp_piece){
+                    ChessBoard.addPiece(opp_piece)
+                    opp_piece = null
+                }
+
+
             }
+
+
+            return false
         }
+
+        function* map_to_individual_move(pieces) {
         
-    
-        moveKing(King,orig_pos)
-        return (true && moved)
+            for (const direc in pieces) {
+
+                for (const arr of pieces[direc]) {
+                   
+                    for (const move of arr)
+                    
+                        yield move
+                }
+
+            }
+        }
+
+
+
     }
 
     // stalemate is same as check mate 
     // stalemate occurs when a player is currently not in check, but any legal move left available would
     // result in him/her moving into check
     // better to return checkmate function
-    isInStalemate(board, player){
-        return this.isInCheckMate(board,player)
+
+    isInStalemate(board, player) {
+        return this.isInCheckMate(board, player)
     }
+
 }
