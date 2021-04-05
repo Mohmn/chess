@@ -21,7 +21,7 @@ export default class ChessBoard {
     place_pieces() {
 
         let color = "Black"
-        this.board.push([new Tank(0, 0, color, "Tk"), new Knight(0, 1, color, "gur"), new Bishop(0, 2, color, "bsh"), new Queen(0, 3, color, "Q"), new King(0, 4, color, "K"), new Bishop(0, 5, color, "bsh"), new Knight(0, 6, color, "gur"), new Tank(0, 7, color, "Tk")])
+        this.board.push([new Tank(0, 0, color, "Rk"), new Knight(0, 1, color, "Knt"), new Bishop(0, 2, color, "bsh"), new Queen(0, 3, color, "Q"), new King(0, 4, color, "K"), new Bishop(0, 5, color, "bsh"), new Knight(0, 6, color, "Knt"), new Tank(0, 7, color, "Rk")])
         this.board.push([])
         for (let i = 0; i < this.size; i++)
             this.board[1].push(new Pawn(1, i, color, "P"))
@@ -34,7 +34,7 @@ export default class ChessBoard {
         this.board.push([])
         for (let i = 0; i < this.size; i++)
             this.board[6].push(new Pawn(6, i, color, "P"))
-        this.board.push([new Tank(7, 0, color, "Tk"), new Knight(7, 1, color, "gur"), new Bishop(7, 2, color, "bsh"), new Queen(7, 3, color, "Q"), new King(7, 4, color, "K"), new Bishop(7, 5, color, "bsh"), new Knight(7, 6, color, "gur"), new Tank(7, 7, color, "Tk")])
+        this.board.push([new Tank(7, 0, color, "Rk"), new Knight(7, 1, color, "Knt"), new Bishop(7, 2, color, "bsh"), new Queen(7, 3, color, "Q"), new King(7, 4, color, "K"), new Bishop(7, 5, color, "bsh"), new Knight(7, 6, color, "Knt"), new Tank(7, 7, color, "Rk")])
     }
 
     
