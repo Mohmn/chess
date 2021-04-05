@@ -410,63 +410,6 @@ export default class Chess {
 
     }
 
-
-    // isInCheckMate(ChessBoard board, int player)
-
-    // avaible moves for king
-    // if for all moves check function return true
-    // its a checkmate  
-    // chck for every piece
-    // isInCheckMate(ChessBoard, player) {
-    //     let King = null
-    //     for (let i = 0; i < ChessBoard.size; i++) {
-    //         for (let j = 0; j < ChessBoard.size; j++) {
-    //             if (ChessBoard.isFilled(i, j)) {
-    //                 King = ChessBoard.pieceAt(i, j)
-    //                 if ((King.constructor.name === "King") && (player.color !== King.color))
-    //                     break
-    //                 King = null
-    //             }
-
-    //         }
-
-    //         if (King)
-    //             break
-    //     }
-
-    //     const orig_pos = [King.getRow(), King.getCol()]
-
-    //     function moveKing(piece, pos) {
-    //         // if the pos contains piece then remove it
-    //         if (!ChessBoard.isFilled(pos[0], pos[1])) {
-    //             ChessBoard.removePiece(piece.getRow(), piece.getCol())
-    //             ChessBoard.removePiece(pos[0], pos[1])
-    //             piece.moveTo(pos[0], pos[1])
-    //             ChessBoard.addPiece(piece)
-    //         }
-    //     }
-    //     const king_moves = King.availableMoves(ChessBoard)
-    //     console.log(king_moves, "kkkkkk")
-
-    //     // using moved variable tot see if the king had any moves to move
-    //     let moved = false
-    //     for (const moves of king_moves['moves']) {
-    //         for (const move of moves) {
-    //             moveKing(King, move)
-    //             if (!this.isInCheck(ChessBoard, player)) {
-    //                 // unmove king
-    //                 moveKing(King, orig_pos)
-    //                 return false
-    //             }
-
-    //             moved = true
-    //         }
-    //     }
-
-
-    //     moveKing(King, orig_pos)
-    //     return (true && moved)
-    // }
     isInCheckMate(ChessBoard, player) {
         // if any piece has any legal move left that would remove the king from check
         const pieces = []
@@ -487,7 +430,7 @@ export default class Chess {
 
 
         function piece_can_counter_check(piece,obj) {
-            
+
             const moves = piece.availableMoves(ChessBoard)
             let opp_piece = null
             const piece_pos = [piece.getRow(), piece.getCol()]
