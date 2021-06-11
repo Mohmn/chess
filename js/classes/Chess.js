@@ -10,6 +10,7 @@ export default class Chess {
         this.whitePlayer = new Player("Red", true)
         this.blackPlayer = new Player("Black", false)
         this.DisplayBoard = this.display.domBoard
+        this.status = false
     }
 
     mousePressed() {
@@ -27,7 +28,7 @@ export default class Chess {
 
     // self invoKing function used to make movablePos as clisure var
     handleClick = (function () {
-
+        
         let player
         let movablePos = null
         let pieceSelectedByPlayer = null
@@ -41,7 +42,7 @@ export default class Chess {
         }
 
         function handling(pos, e) {
-
+            
             if (this.whitePlayer.turn) {
                 player = this.whitePlayer
             } else {
@@ -50,7 +51,7 @@ export default class Chess {
 
 
             // if the board is filled with some piece
-
+            console.log(player)
             if (this.board.isFilled(pos[0], pos[1]) && player.FirstTurn()) {
 
                 //    if it is white players turn olayer cannot click on black players pieces and vice versa
@@ -63,7 +64,7 @@ export default class Chess {
 
                 player.numTimesClicked += 1
                 pieceSelectedByPlayer = this.board.pieceAt(pos[0], pos[1])
-                movablePos = pieceSelectedByPlayer.availableMoves(this.board)
+                movablePos = pieceSelectedByPlayer.availableMoves(this.board,this.isInCheck)
                 this.display.showPath(movablePos)
 
                 console.log(movablePos)
@@ -77,22 +78,27 @@ export default class Chess {
                 this.display.unHighlightCell(player.pieceSelected[1])
                 this.movePiece(pieceSelectedByPlayer, pos)
                 this.display.reDraw()
+
                 if (pieceSelectedByPlayer.constructor.name === "Pawn") {
                     // check for pawn promotion
                     if (pieceSelectedByPlayer.canBePromoted(this.board.size)) {
                         // do something in chess disp
                         // to do write gui for pawn promotion
                     }
+                }else if(pieceSelectedByPlayer.constructor.name === "King"){
+                   this.board.updateKingLoc(pieceSelectedByPlayer)
                 }
                 // console.log(movablePos,'yes',pieceSelectedByPlayer.constructor.name)
 
-                if (this.isInCheck(this.board, player)) {
+                if (this.isInCheck(this.board, player.color)) {
                     console.log("Chess in king")
                     if (this.isInCheckMate(this.board, player)) {
                         console.log('chessmate')
+                        this.status = true
                     }
                 } else if (this.isInStalemate(this.board, player)) {
                     console.log('stalemate')
+                    this.status = true
                 }
 
                 resetPlayer(this)
@@ -137,29 +143,44 @@ export default class Chess {
     // look for diagonal bishop,queen
     // l_shape knight
     // immediate corners pawn
-    // another King
+    // another King 
 
-
-    isInCheck(ChessBoard, player) {
-
+    isInCheck(ChessBoard, playersColor,king_to_see="opposite") {
+        // how can i make it o(1)
+        // it's o(n^2)
+        // can store kings location as a property of chessBoard
         let King = null
-        for (let i = 0; i < ChessBoard.size; i++) {
-            for (let j = 0; j < ChessBoard.size; j++) {
-                if (ChessBoard.isFilled(i, j)) {
-                    King = ChessBoard.pieceAt(i, j)
-                    if ((King.constructor.name === "King") && (player.color !== King.color))
-                        break
-                    King = null
-                }
+        // for (let i = 0; i < ChessBoard.size; i++) {
+        //     for (let j = 0; j < ChessBoard.size; j++) {
+        //         if (ChessBoard.isFilled(i, j)) {
+        //             King = ChessBoard.pieceAt(i, j)
+        //             if ((King.constructor.name === "King") && (player.color !== King.color))
+        //                 break
+        //             King = null
+        //         }
 
-            }
+        //     }
 
-            if (King) {
-                console.log(King.color, "ccccccccccccccccccccccccc")
-                break
-            }
+        //     if (King) {
+        //         console.log(King.color, "ccccccccccccccccccccccccc")
+        //         break
+        //     }
+        // }
+        // king_to_see used here because in movewouldcausecheck method i have to look for my own king
+        // and in the checkmate or stalemate method io have to opp king
+        if(king_to_see === "own"){
+            if(ChessBoard.king1.color === playersColor)
+                King = ChessBoard.pieceAt(ChessBoard.king1.location[0],ChessBoard.king1.location[1])
+            else
+                King = ChessBoard.pieceAt(ChessBoard.king2.location[0],ChessBoard.king2.location[1])
+        }else{
+            if(ChessBoard.king1.color !== playersColor)
+            King = ChessBoard.pieceAt(ChessBoard.king1.location[0],ChessBoard.king1.location[1])
+        else
+            King = ChessBoard.pieceAt(ChessBoard.king2.location[0],ChessBoard.king2.location[1])
         }
 
+        console.log(King,'kinggggg')
         // fuction to make iterator can loop both forwards as well as backwards
         function* range(start, end, leap) {
             if (leap > 0) {
@@ -410,7 +431,10 @@ export default class Chess {
 
     }
 
-    isInCheckMate(ChessBoard, player) {
+    // look for every piece and watch for every opp piece 
+    // if any piece cancels out check then its not a check mate 
+    // otherwise its a check mate
+    isInCheckMate(ChessBoard=this.board, player) {
         // if any piece has any legal move left that would remove the king from check
         const pieces = []
 
@@ -418,7 +442,7 @@ export default class Chess {
             for (let j = 0; j < ChessBoard.size; j++) {
                 if (ChessBoard.isFilled(i, j) && (ChessBoard.pieceAt(i, j).color !== player.color)) {
                     const piece = ChessBoard.pieceAt(i, j)
-                    console.log(piece.constructor.name,piece.color)
+                    // console.log(piece.constructor.name,piece.color)
                     if (piece_can_counter_check(piece,this)) {
                         return false
                     }
@@ -431,7 +455,7 @@ export default class Chess {
 
         function piece_can_counter_check(piece,obj) {
 
-            const moves = piece.availableMoves(ChessBoard)
+            const moves = piece.availableMoves(ChessBoard,obj.isInCheck)
             let opp_piece = null
             const piece_pos = [piece.getRow(), piece.getCol()]
 
@@ -441,9 +465,16 @@ export default class Chess {
                     // mark the pos of opp piece
                     opp_piece = ChessBoard.pieceAt(pos[0],pos[1])
                     obj.movePiece(piece,pos)
-                }else
-                    obj.movePiece(piece,pos)
 
+
+                }else{
+                    obj.movePiece(piece,pos)
+                }
+
+                if(piece.constructor.name === "King"){
+                    ChessBoard.updateKingLoc(piece)
+                }
+                    
                 // if we move the player to that pos and that cancels out check
                 // then its not a checkmate 
                 if(!obj.isInCheck(ChessBoard,player)){
@@ -455,6 +486,10 @@ export default class Chess {
                     if(opp_piece){
                         ChessBoard.addPiece(opp_piece)
                         opp_piece = null
+                    }
+
+                    if(piece.constructor.name === "king"){
+                        ChessBoard.updateKingLoc(piece)
                     }
 
                     return true
@@ -469,6 +504,9 @@ export default class Chess {
                     opp_piece = null
                 }
 
+                if(piece.constructor.name === "king"){
+                    ChessBoard.updateKingLoc(piece)
+                }
 
             }
 

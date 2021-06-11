@@ -47,7 +47,7 @@ export default class Pawn extends Piece {
     // the direction argument is used to check if the player moves upwards or downwards
     // -1 direction for upwards movement, +1 direction for downwards movement
 
-    availableMoves(chessBoard) {
+    availableMoves(chessBoard,isInCheck) {
         const row=this.getRow(),col = this.getCol()
         let moves  = []
         if (this.moveUp)
@@ -58,6 +58,14 @@ export default class Pawn extends Piece {
         const movable = {
 
             moves: moves
+        }
+
+        for(let dimensions in movable){
+
+            for(let i=0;i<movable[dimensions].length;i++){
+                movable[dimensions][i] = movable[dimensions][i].filter(pos =>
+                    !this.moveWouldCauseCheck(pos[0],pos[1],chessBoard,isInCheck))
+            }
         }
         return movable
 

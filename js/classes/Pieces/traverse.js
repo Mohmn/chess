@@ -116,6 +116,8 @@ function traverse_diagonals(row, col, chessBoard, color) {
 
     return [leftUpperDiag, rightLowerDiag, leftLowerDiag, rightUpperDiag]
 }
+
+
 export {
     traverse_rows,
     traverse_cols,

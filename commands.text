@@ -1,0 +1,2 @@
+live-server --port=1234 --entry-file=html/board.html
+

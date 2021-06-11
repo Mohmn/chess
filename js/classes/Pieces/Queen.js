@@ -94,7 +94,7 @@ export default class Queen extends Piece {
 
 
 
-    availableMoves(chessBoard) {
+    availableMoves(chessBoard,isInCheck) {
         const row=this.getRow(),col = this.getCol()
         const rows = traverse_rows(row, col, chessBoard, this.color)
         const cols = traverse_cols(row, col, chessBoard, this.color)
@@ -103,6 +103,14 @@ export default class Queen extends Piece {
             rows: rows,
             cols: cols,
             diags: diags
+        }
+
+        for(let dimensions in movable){
+
+            for(let i=0;i<movable[dimensions].length;i++){
+                movable[dimensions][i] = movable[dimensions][i].filter(pos =>
+                    !this.moveWouldCauseCheck(pos[0],pos[1],chessBoard,isInCheck))
+            }
         }
 
         return movable

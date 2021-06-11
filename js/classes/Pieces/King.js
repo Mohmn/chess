@@ -41,7 +41,7 @@ export default class King extends Piece {
 
     //   firstly it checks
 
-    availableMoves(chessBoard) {
+    availableMoves(chessBoard,isInCheck) {
         const row=this.getRow(),col = this.getCol()
 
         let x = row,
@@ -76,6 +76,14 @@ export default class King extends Piece {
 
         const movable = {
             moves: moves
+        }
+
+        for(let dimensions in movable){
+
+            for(let i=0;i<movable[dimensions].length;i++){
+                movable[dimensions][i] = movable[dimensions][i].filter(pos =>
+                    !this.moveWouldCauseCheck(pos[0],pos[1],chessBoard,isInCheck))
+            }
         }
 
         return movable

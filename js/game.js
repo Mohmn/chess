@@ -2,18 +2,18 @@ import ChessDisplay  from  "./classes/ChessDisplay.js"
 import Board from "./classes/ChessBoard.js"
 import Player from "./classes/Player.js"
 import Chess from "./classes/Chess.js"
+import Tank from "./classes/Pieces/Tank.js"
 
+const board = new Board('Black','Red')
 
-const board = new Board()
-
-
+// const T= new Tank(6,2,"RED","TNK")
+// board.addPiece(T)
 const display = new ChessDisplay(board,document)
-const p1 = new Player('white')
 const chess = new Chess(board,display)
-const p2 = new Player('black')
 
 display.draw()
 chess.mousePressed()
+console.log(chess.status,'yo playinn')
 
 
 

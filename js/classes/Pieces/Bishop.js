@@ -52,7 +52,7 @@ export default class Bishop extends Piece {
         return false
     }
 
-    availableMoves(chessBoard) {
+    availableMoves(chessBoard,isInCheck) {
         const row=this.getRow(),col = this.getCol()
         const diagonals = traverse_diagonals(row, col, chessBoard, this.color)
 
@@ -60,6 +60,14 @@ export default class Bishop extends Piece {
             diags: diagonals
         }
 
+        for(let dimensions in movable){
+
+            for(let i=0;i<movable[dimensions].length;i++){
+                movable[dimensions][i] = movable[dimensions][i].filter(pos =>
+                    !this.moveWouldCauseCheck(pos[0],pos[1],chessBoard,isInCheck))
+            }
+        }
+        
         return movable
     }
 }
