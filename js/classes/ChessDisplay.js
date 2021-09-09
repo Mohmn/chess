@@ -1,6 +1,5 @@
 export default class ChessDisplay {
 
-
     constructor(board, document) {
         this.ChessBoard = board
         this.Document = document
@@ -42,7 +41,7 @@ export default class ChessDisplay {
 
     }
 
-    reDraw(){
+    reDraw() {
 
         for (let i = 0; i < this.domBoard.children.length; i++) {
 
@@ -52,14 +51,14 @@ export default class ChessDisplay {
                     const p = this.ChessBoard.pieceAt(i, j)
                     this.domBoard.children[i].children[j].innerText = p.representation
                     this.domBoard.children[i].children[j].style.color = p.color
-                }else{
+                } else {
                     this.domBoard.children[i].children[j].innerText = null
                 }
             }
 
         }
 
-        
+
     }
 
     getCell(row, col) {
@@ -72,7 +71,7 @@ export default class ChessDisplay {
         cell.appendChild(elem)
     }
 
-    unvisulaizeCell(cell){
+    unvisulaizeCell(cell) {
         const child = cell.children[0]
         cell.removeChild(child)
     }
@@ -94,7 +93,7 @@ export default class ChessDisplay {
         }
     }
 
-    removePath(locations){
+    removePath(locations) {
         for (const loc in locations) {
             locations[loc].map((pos) => pos.map((p) => {
 
@@ -104,6 +103,31 @@ export default class ChessDisplay {
         }
     }
 
-    
-    
+
+    quit(player, action, func) {
+        let king = this.ChessBoard.king1.color === player.color ? this.ChessBoard.king2 :
+            this.ChessBoard.king1
+        king = this.ChessBoard.pieceAt(...king.location)
+        const cell = this.getCell(king.getRow(), king.getCol())
+
+        if (action === 'checkmate') {
+            cell.classList.add('checkmate')
+            this.removeEventListeners(func)
+            this.Document.getElementById('result').innerText = `Game Over, Team ${king.color} lost`
+            return
+        }
+
+        if (action === 'stalemate') {
+            cell.classList.add('stalemate')
+        }
+    }
+
+    removeEventListeners(func) {
+        for (let i = 0; i < this.domBoard.children.length; i++) {
+            for (let j = 0; j < this.domBoard.children[i].children.length; j++) {
+                this.domBoard.children[i].children[j].removeEventListener('click', func[[i, j]])
+            }
+        }
+    }
+
 }

@@ -67,7 +67,7 @@ export default class ChessBoard {
     }
 
     addPiece(Piece) {
-    
+
         this.board[Piece.row][Piece.col] = Piece
 
     }
@@ -84,4 +84,6 @@ export default class ChessBoard {
             this.king2.location = [king.getRow(), king.getCol()]
 
     }
+
+
 }
